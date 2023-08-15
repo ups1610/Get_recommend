@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/front.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
+  <title>Get Recommend</title>
+  <style>
+    body{
+      background: #1e1e1e;
+    }
+    @media screen and (min-width:250px) and (max-width:500px){
+      #heading img{
+        display: none;
+      }
+      #heading h1{
+        font-size: 50px !important;
+      }
+      .row{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        width: 100% !important;
+      }
+
+      .row .col{
+           width: 75%;
+      }
+    }
+
+    @media screen and (min-width:501px) and (max-width:850px){
+      .row{
+        width: 100% !important;
+      }
+      #heading img{
+        display: none;
+      }
+    }
+    @media(min-width:521px){
+          #heading img{
+            display: none;
+          }
+    }
+  </style>
+</head>
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{url_for('sangeet')}}">
+        <img src="{{ url_for('static', filename='images/web_l.png') }}" width="30" height="30" alt="" class="img-hover-zoom rounded-circle">
+      </a>
+      <a class="navbar-brand text-color text-light" href="{{url_for('sangeet')}}">Get Recommend</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 bg-dark rounded">
+          <li class="nav-item link-info">
+            <a class="nav-link text-color text-light" href="{{url_for('about_details')}}">About</a>
+          </li>
+  
+          <li class="nav-item">
+              <a class="nav-link text-color text-light" href="{{url_for('contact_details')}}">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-secondary" href="{{url_for('base')}}">Dashboard</a>
+        </li>
+        </ul>
+        {% if not session %}
+        <form class="d-flex bg-dark rounded" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {% else %}
+        <form class="d-flex px-3 bg-dark rounded">
+          <div id="navbarNavDarkDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <button class="btn btn-transparent dropdown-toggle text-light" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="{{ url_for('static', filename='images/profile.png') }}" alt="" width="30" height="30" class="rounded"> <span class="text-light">{{session.userinfo.name.split(' ')[0]}}!!!</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-light">
+                  <li><a class="dropdown-item" href="{{url_for('logout')}}">Log Out</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+   
+  <!-- loader -->
+  <div class="loader"></div>
+
+
+  <div id="heading">
+    <h1 class="white" style="font-family: 'Times New Roman', Times, serif;">YOUR <span class="yellow">MUSIC</span></h1>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/youtube.jpg') }}" alt="" height="100" width="100%">
+    </div>       
+  </div>
+
+  <div class="row row-cols-2 row-cols-md-3 g-4 m-auto w-75">
+    {% for key, item in data.items() %}
+    <div class="col mt-5">
+      <div class="card h-100">
+        <img class="card-img-top" src="{{item['thumbnail_url']}}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{item['title']}}</h5>
+          <p class="card-text">{{item['description']}}</p>
+          <a href="{{item['video_id']}}" class="btn btn-danger">Go Track</a>
+        </div>
+    </div>
+    </div>
+  {% endfor %}
+  <!-- back-to-top button -->
+  </div>
+  
+  <!--footer start-->
+  <footer class="mt-5">
+    <div class="footer-wrap">
+    <div class="container first_class">
+        <div class="row">
+          <div class="col-md-4 col-sm-6">
+            <h3>BE THE FIRST TO KNOW</h3>
+            <p>Get all the latest information on Sangeet Services, Events, Jobs
+              and Fairs. Sign up for our newsletter today.</p>
+          </div>
+          <div class="col-md-4 col-sm-6">
+          <form class="newsletter">
+             <input type="text" placeholder="Email Address"> 
+             <button class="newsletter_submit_btn d-none" type="submit"></button>  
+          </form>
+          
+          </div>
+          <div class="col-md-4 col-sm-6">
+          <div class="col-md-12">
+            <div class="standard_social_links">
+          <div>
+            <li class="round-btn btn-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a>
+  
+            </li>
+            <li class="round-btn btn-linkedin"><a href="#"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-twitter"><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-instagram"><a href="#"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-whatsapp"><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-envelop"><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+  
+            </li>
+          </div>
+        </div>  
+          </div>
+            <div class="clearfix"></div>
+          <div class="col-md-12"><h3 style="text-align: right;">Stay Connected</h3></div>
+          </div>
+        </div>
+    </div>
+    <div class="copyright"> Copyright 2023 | All Rights Reserved by Get Recommend.</div>
+    </div>
+</footer>
+<!--footer end-->
+  <script src="{{ url_for('static', filename='loader.js') }}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='autocomplete_2.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/fddf5c0916.js" crossorigin="anonymous"></script>
+</body>
+</html>

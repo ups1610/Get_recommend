@@ -1,0 +1,197 @@
+.log-control{
+    display: none;
+}
+
+@media screen and (min-width:250px) and (max-width:402px) {
+    #side_nav.active{
+        z-index: 2;
+    }
+
+    .sm-log-control{
+       display: none;
+    }
+
+    .log-control{
+        display: block;
+        margin-top: 17px;
+        margin-left: -2px;
+    }
+
+    .dashboard-container .alert .container{
+        font-size: 1.1rem;
+    }
+
+    .dashboard-container .alert .container .row{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dashboard-container .middle-1 .row{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .dashboard-container .middle-1 .row #myChart{
+        height: 18rem !important;
+        font-size: 2px !important;
+    }
+    .dashboard-container-2 .set-position{
+       height: 8rem;
+       width: 15rem !important;
+       margin-top: 8rem;
+       z-index: 1;
+    }
+    .dashboard-container-2 .set-position p{
+        font-size: 0.9rem !important;
+    }
+    .dashboard-container-2 .set-position h2,
+    .dashboard-container-2 .set-position p{
+        font-size: 1rem;
+        display: block;
+        display: inline-block;
+        margin-top: -0.5rem;
+    }
+    .dashboard-container-2 .translate-middle{
+        width: 20rem;
+        text-align: center;
+    }
+    .dashboard-container-2 .translate-middle a{
+        margin-top: -10rem;
+    }
+    .dashboard-container-2 .translate-middle a h1,
+    .dashboard-container-2 .translate-middle a i{
+        font-size: 1.5rem;
+    }
+
+    .dashboard-container-3 .translate-middle{
+        width: 14rem;
+        text-align: center;
+    }
+    .dashboard-container-3 .translate-middle a i{
+        color: rgb(255, 4, 4) !important;
+    }
+    .dashboard-container-3 .set-position{
+        width: 10rem !important;
+    }
+    .dashboard-container-3 .marquee-container{
+        height: 2rem;
+    }
+
+    .dashboard-container-3 .marquee-container .marquee-content{
+        height: 2rem;
+        margin-top: 0.1rem;
+    }
+    .dashboard-container-3 .marquee-container img{
+        height: 1.7rem !important;
+    }
+    .dashboard-container-4 .marquee-content{
+        height: 6rem;
+    }
+    .dashboard-container-4 .marquee-content img{
+        height: 6rem;
+    }
+}
+
+@media screen and (min-width:403px) and (max-width:430px){
+    .dashboard-container-3 .set-position{
+        width: 10rem !important;
+    }
+    .dashboard-container-3 .translate-middle a i{
+        color: rgb(255, 4, 4) !important;
+    }
+}
+
+@media screen and (min-width:403px) and (max-width:865px){
+    #side_nav.active{
+        z-index: 2;
+    }
+    .dashboard-container .alert .container .row{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .dashboard-container .middle-1 .row{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dashboard-container-2 .translate-middle{
+        text-align: center;
+    }
+
+    .dashboard-container-2 .translate-middle a{
+        margin-top: -11rem;
+        width: 21rem;
+    }
+    .dashboard-container-2 .translate-middle a h1,
+    .dashboard-container-2 .translate-middle a i{
+        font-size: 1.8rem;
+    }
+
+    .dashboard-container-2 .set-position{
+        height: 11rem;
+        width: 17rem !important;
+        margin-top: 9rem;
+        z-index: 1;
+    }
+    
+     .dashboard-container-3 .translate-middle{
+        text-align: center;
+    }
+           
+    .dashboard-container-3 .set-position{
+        width: 12rem !important;
+    }
+
+    .dashboard-container-3 .marquee-container{
+        height: 2.6rem;
+    }
+
+    .dashboard-container-3 .marquee-container .marquee-content{
+        height: 2.5rem;
+        margin-top: 0.1rem;
+    }
+    .dashboard-container-3 .marquee-container img{
+        height: 2.5rem !important;
+    }
+}
+
+@media screen and (min-width:800px) and (max-width:1060px){
+    .dashboard-container .alert .container .row{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .dashboard-container-2 .translate-middle a h1,
+    .dashboard-container-2 .translate-middle a i{
+        font-size: 1.8rem;
+    }
+
+    .dashboard-container-2 .set-position h2,
+    .dashboard-container-2 .set-position p{
+        font-size: 1rem !important;
+    }
+
+    .dashboard-container-2 .set-position{
+      
+        width: 17rem !important;
+    }
+       
+}

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/front.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/series.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <title>Get Recommend</title>
+  <style>
+    .dark-overlay{
+      background-image: url("{{ url_for('static', filename='images/series_bckd.png') }}");
+    }
+    .img-hover-zoom{
+    transition: transform .2s;
+}
+
+    .img-hover-zoom:hover{
+        transform: scale(1.5);
+    }
+    
+    .navbar .text-color{
+        color: rgb(255, 253, 253);
+        transition: text-shadow 0.3s ease;
+    }
+    
+    .navbar .text-color:hover{
+        text-shadow: 0.5px 0.5px rgb(5, 5, 5);
+        color: rgb(253, 224, 137);
+    }
+
+    .form{
+      position: relative;
+    }
+
+    .form .fa-magnifying-glass{
+      position: absolute;
+      top:20px;
+      left: 20px;
+      color: #9ca3af;
+      transition: transform .2s;
+    }
+    
+    .fa-microphone, .zoom{
+    transition: transform 0.2s;
+    }
+    .form .fa-magnifying-glass:hover , .fa-microphone:hover, .zoom:hover{
+        transform: scale(1.5);
+    }
+
+    .zoom-2{
+      transition: 0.5s cubic-bezier(0.6, 0.03, 0.28, 0.98);  
+      transform: scale(1);
+    }
+    .zoom-2:hover{
+      transform: scale(1.1);
+      transition: 0.5s cubic-bezier(0.6, 0.03, 0.28, 0.98);
+    }
+
+    .form span{
+     position: absolute;
+     right: 17px;
+     top: 13px;
+     padding: 2px;
+     border-left: 1px solid #d1d5db;
+     }
+
+    .left-pan{
+    padding-left: 7px;
+    }
+    
+    .left-pan i{
+    
+    padding-left: 10px;
+    }
+    
+    .form-input{
+    
+    height: 55px;
+    text-indent: 33px;
+    border-radius: 10px;
+    }
+
+    .form-input:focus{
+    
+    box-shadow: none;
+    border:none;
+    }
+    .bottom{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    .back-to-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: none;
+}
+.rounded-box{
+  width: 3rem;
+  height: 2rem;
+}
+.card img {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.card .middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+.card:hover .img {
+  opacity: 0.3;
+}
+
+.card:hover .middle {
+  opacity: 1;
+}
+
+#info-loading{
+  display: none;
+}
+.shadow-effect{
+  filter: drop-shadow(1px 1px 50px rgb(0, 0, 0));
+}
+  </style>
+
+  <script type="text/javascript">
+    var series = {{suggestions|tojson}};
+    $(document).ready(function(){
+      $("#myModal").modal('show');
+    });    
+  </script>
+
+</head>
+<body class="dark-overlay">
+
+  <!-- loader -->
+  <div class="loader"></div>
+  
+  <!-- navbar -->
+  <nav class="navbar bg-transparent mt-2">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex text-light" href="{{url_for('sangeet')}}">
+        <img src="{{ url_for('static', filename='images/web_l.png') }}" width="30" height="30" alt="" class="img-hover-zoom rounded-circle">
+        <p class="navbar-band px-3 text-color">Get Recommend</p>
+      </a>
+      {% if not session %}
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {% else %}
+        <form class="d-flex">
+            <ul class="navbar-brand" style="list-style: none;">
+              <li class="nav-item dropdown">
+                <button class="btn btn-transparent text-color dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="{{ url_for('static', filename='images/profile.png') }}" alt="" width="30" height="30" class="rounded text-color"> {{session.userinfo.name.split(' ')[0]}}!
+                </button>
+                <ul class="dropdown-menu dropdown-menu-light">
+                  <li><a class="dropdown-item" href="{{url_for('logout')}}">Log Out</a></li>
+                </ul>
+              </li>
+            </ul>
+        </form>
+        {% endif %}
+    </div>
+  </nav>
+
+  <!-- title -->
+  <div class="m-auto w-50 text-center sm-title">
+    <a href="{{url_for('series_suggestion')}}" class="text-decoration-none zoom"><h1 class="text-light zoom">SERIES <span class="text-danger zoom">MANIA</span></h1></a>
+  </div>
+
+
+  <!-- features -->
+  <div class="features bg-transparent w-25 m-auto px-4 mt-5">
+    <form action="{{url_for('series_info')}}" method="POST" class="d-flex form">
+       
+       <div class="dropdown px-3">
+           <button for="year" class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+             YEAR
+           </button>
+           <ul class="dropdown-menu">
+             <li><button class="dropdown-item loadonclick" name="year" value="2023 2020">2023 - 2020</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="2019 2016">2019 - 2016</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="2015 21012">2015 - 2012</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="2011 2009">2011 - 2009</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="2008 2005">2008 - 2005</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="2004 2000">2004 - 2000</button></li>
+             <li><button class="dropdown-item loadonclick" name="year" value="1999 1996">1999 - 1996</button></li>
+           </ul>
+         </div>
+
+         <div class="dropdown px-3">
+           <button for="genre" class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+             GENRE
+           </button>
+           <ul class="dropdown-menu">
+             <li><button class="dropdown-item loadonclick" name="genre" value="Comedy">Comedy</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Drama">Drama</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Action">Action/Thriller</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Documentry">Documentry</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Adventure">Adventure</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Romance">Romance</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Reality">Reality-TV</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="History">History</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Horror">Horror</button></li>
+             <li><button class="dropdown-item loadonclick" name="genre" value="Animation">Animation</button></li>
+           </ul>
+         </div>
+
+         <div class="dropdown px-3">
+           <button for="rating" class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+             IMDB
+           </button>
+           <ul class="dropdown-menu">
+             <li><button class="dropdown-item loadonclick" name="rating" value="10.0">10</button></li>
+             <li><button class="dropdown-item loadonclick" name="rating" value="9.0">9</button></li>
+             <li><button class="dropdown-item loadonclick" name="rating" value="8.0">8</button></li>
+             <li><button class="dropdown-item loadonclick" name="rating" value="7.0">7</button></li>
+             <li><button class="dropdown-item loadonclick" name="rating" value="6.0">6</button></li>
+             <li><button class="dropdown-item loadonclick" name="rating" value="5.0">5</button></li>
+           </ul>
+         </div>
+    </form>
+
+      <p class="m-auto py-3 w-50 text-info fs-5" id="info-loading">🫠Wait a min . . .</p>
+   
+  </div>
+
+  <!-- search engine -->
+  <form action="{{url_for('series_matches')}}" method="POST" class="form w-75 m-auto mt-5">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" class="form-control form-input" name="name" id="autotext" autocomplete="off" placeholder="Search series...">
+    <span class="left-pan"><a href="#" class="text-decoration-none text-dark"><i class="fa-solid fa-microphone"></i></a></span>
+    <div class="w-25 m-auto mt-5 px-5 d-flex sm-enter">
+        <button type="submit" class="btn btn-outline-light fs-4 series-button w-100 h-25">Enter <i class="fa-solid fa-arrow-right"></i></button>
+    </div> 
+</form>
+
+  <!-- pop-up description -->
+  {% if not data %}
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header bg-warning">
+         <h1 class="modal-title fs-5 text-dark" id="myModalLabel">Welcome to Series Mania</h1>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body text-dark">
+         <p>Not able to find the series while searching through auto-suggestions. No need to worry,😁 Simply type the series name and press "enter". Typos are managed well Enjoy😊</p>
+       </div>
+       <div class="modal-footer bg-dark">
+         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+       </div>
+     </div>
+   </div>
+  </div>
+  {% endif %}
+
+  <!-- footer -->
+  {% if not data %}
+  <div class="footer-wrap bottom">
+    <div class="copyright"> Copyright 2023 | All Rights Reserved by Get Recommend.</div>
+  </div>
+  {% endif %}
+
+  <!-- match text -->
+  {% if data and type=="details_1" %}
+  <div class="m-auto w-50 text-center mt-5">
+    <h2 class="text-center text-light">Match 😜 Found</h2>
+    <p class="text-center text-light fs-4"><span class="text-warning">Click</span> to Get 😎</p>
+  </div>
+  {% endif %}
+  
+  <!-- card -->
+  {% if data and type == 'details_1' %}
+  <div class="row row-cols-2 row-cols-md-3 g-4 m-auto w-50 card-1">
+    {% for key,item in data.items() %}
+    <div class="col mt-5">
+      <div class="card h-100 position-relative zoom-2">
+        <img src="{{item['image']}}" class="card-img-top img" alt="...">
+        <form action="{{url_for('series_recommend')}}" method="POST" class="middle">
+          <button type="submit" value="{{item['id']}}" name="seriesId" class="btn btn-outline-danger">Click Me</button>
+        </form>
+        <div class="card-body">
+          <h5 class="card-title">{{item['name']}}</h5>
+          <p class="text-dark text-center rounded-box rounded-pill py-1 position-absolute bg-warning bg-gradient" style="top: 1%; left: 1%;">{{item['rating'][0:3]}}</p>
+        </div>
+      </div>
+    </div> 
+    {% endfor %}
+  </div>
+
+  <!-- back-to-top button -->
+  <a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button"><i class="fas fa-chevron-up"></i></a>
+
+  <!-- card-footer -->
+  <div class="footer-wrap mt-5">
+    <div class="copyright"> Copyright 2023 | All Rights Reserved by Get Recommend.</div>
+  </div>
+  {% endif %}
+
+  <!-- series-details -->
+  {% if data and type=='details_2' %}
+  {% for key,item in data.items() %}
+  <div class="m-auto w-50 text-center mt-5">
+    <h2 class="text-center text-light">{{item['name']}}</h2>
+  </div>
+
+  <div class="card mb-3 w-75 m-auto bg-transparent" style="max-width: 1000px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{item['image']}}" class="img-fluid rounded-start w-100 rounded border shadow-effect" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body p-auto text-light">
+          <div class="d-flex justify-content-between">
+            <div class="genre-text d-flex">
+              {% for index,val in item['genre'].items() %}
+              {% if index == 0 %}
+              <p class="btn btn-danger mx-1">{{val}}</p>
+              {% endif %}
+              {% if index == 1 %}
+              <p class="btn btn-warning mx-1">{{val}}</p>
+              {% endif %}
+              {% if index== 2 %}
+              <p class="btn btn-light mx-1">{{val}}</p>
+              {% endif %}
+              {% endfor %}
+            </div>
+            <div class="d-flex bg-gradient text-light text-center rounded-pill" style="width: 5rem; height: 2rem;">
+              <i class="fa-solid fa-star text-center py-1 px-1"></i>
+              <p class="text-center">{{item['rating']}}/10</p>
+            </div>
+          </div>
+          <h5 class="card-title mx-1">Overview :</h5>
+          <p class="card-text mx-1 fs-5">{{item['overview']}}</p>
+          <div class="card-text d-flex">
+            <p class="mx-1 fs-5">Seasons : {{item['seasons']}}</p>
+            <p class="card-text mx-3 fs-5">Episodes : {{item['episodes']}}</p>
+          </div>
+          <div class="card-text d-flex">
+            <p class="mx-1 fs-5">Origin : {{item['first_air_date']}}</p>
+            <p class="mx-3 fs-5">End : {{item['last_air_date']}}</p>
+          </div>
+          <p class="card-text mx-1 fs-5">Runtime : {{item['runtime']}} min(s)</p>
+          <p class="card-text mx-1 fs-5">Status : {{item['status']}}</p>
+          <p class="card-text mx-1 fs-5">Language : <span class="text-dark rounded-pill bg-light bg-gradient px-3 py-1 text-center"> {{item['ln']}}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if you_id %}
+  <div class="d-flex justify-content-between w-75 m-auto shadow-effect mt-5 video-card">
+    <div id="player" class="border-5 rounded"></div>
+    <div class="text-light w-25 m-auto text-center">
+      <h1>Trailer</h1>
+      <p class="fs-4">( Get the insights and details 😎 )</p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if rec_data %}
+  <div class="m-auto w-50 text-center mt-5 recommend">
+    <h2 class="text-center text-light">Recommendation 😜 For You</h2>
+    <p class="text-center text-light fs-4"><span class="text-warning"><span class="text-light">Based on {{session.userinfo.name.split(' ')[0]}}! watch ,</span> Click</span> to Get 😎 more Recommendation</p>
+  </div>
+  {% endif %}
+
+  {% if rec_data  %}
+  <div class="row row-cols-2 row-cols-md-3 g-4 m-auto w-50 card-1">
+    {% for key,item in rec_data.items() %}
+    <div class="col mt-5">
+      <div class="card h-100 position-relative zoom-2">
+        <img src="{{item['image']}}" class="card-img-top img" alt="...">
+        <form action="{{url_for('series_recommend')}}" method="POST" class="middle">
+          <button type="submit" value="{{item['id']}}" name="seriesId" class="btn btn-outline-danger">Click Me</button>
+        </form>
+        <div class="card-body">
+          <h5 class="card-title">{{item['name']}}</h5>
+          <p class="text-dark text-center rounded-box rounded-pill py-1 position-absolute bg-warning bg-gradient" style="top: 1%; left: 1%;">{{item['rating'][0:3]}}</p>
+        </div>
+      </div>
+    </div> 
+    {% endfor %}
+  </div>
+  {% endif %}
+  <a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button"><i class="fas fa-chevron-up"></i></a>
+  <div class="footer-wrap mt-5">
+    <div class="copyright"> Copyright 2023 | All Rights Reserved by Get Recommend.</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  
+
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="script.js"></script>
+ 
+  <script src="{{ url_for('static', filename='loader.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='autocomplete_2.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/fddf5c0916.js" crossorigin="anonymous"></script>
+  {% if you_id %}
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: '{{you_id}}', // Replace with the actual YouTube video ID
+            playerVars: {
+                autoplay: 1,            // Autoplay the video
+                controls: 0,            // Show player controls
+                modestbranding: 1,      // Hide YouTube logo in controls
+                rel: 1,                 // Don't show related videos at the end
+                fs: 1                   // Disable fullscreen button
+            },
+            events: {
+                onReady: onPlayerReady
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo(); // Autoplay the video when the player is ready
+    }
+  </script>
+  {% endif %}
+</body>
+</html>

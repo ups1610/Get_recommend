@@ -1,0 +1,12 @@
+numpy
+opencv-python
+tensorflow
+tflearn
+keras
+matplotlib
+pandas
+flask
+Flask-FontAwesome
+google-api-python-client
+lxml
+authlib

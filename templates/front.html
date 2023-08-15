@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/front.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
+  <title>Get Recommend</title>
+</head>
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{url_for('sangeet')}}">
+        <img src="{{ url_for('static', filename='images/web.png') }}" width="30" height="30" alt="" class="img-hover-zoom rounded-circle">
+      </a>
+      <a class="navbar-brand text-color" href="{{url_for('sangeet')}}">Get Recommend</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item link-info">
+            <a class="nav-link text-color text-dark" href="{{url_for('about_details')}}">About</a>
+          </li>
+  
+          <li class="nav-item">
+              <a class="nav-link text-color text-dark" href="{{url_for('contact_details')}}">Contact</a>
+          </li>
+          {% if not session %}
+          <li class="nav-item">
+            <a class="nav-link text-color text-dark" href="{{url_for('login_page')}}">Login</a>
+         </li>
+         {% else %}
+         <li class="nav-item">
+          <a class="nav-link text-color text-dark btn btn-outline-light" href="{{url_for('base')}}">Let's Start</a>
+       </li>
+       {% endif %}
+        </ul>
+        {% if not session %}
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {% else %}
+        <form class="d-flex px-5 media-x">
+          <div id="navbarNavDarkDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <button class="btn btn-transparent dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="{{ url_for('static', filename='images/profile.png') }}" alt="" width="30" height="30" class="rounded"> {{session.userinfo.name.split(' ')[0]}}!
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="{{url_for('logout')}}">Log Out</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- loader -->
+  <div class="loader"></div>
+
+  <!-- carousel -->
+  <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{{ url_for('static', filename='images/front_banner_1.jpg') }}" class="d-block w-100 height" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <button type="button" class="btn btn-outline-light mb-4">Learn more</button>
+                <h4>Music with Feel</h4>
+                <p class="fs-5">sooth you from inside and overall soul</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{{ url_for('static', filename='images/front_banner_4.jpg') }}" class="d-block w-100 height" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <button type="button" class="btn btn-outline-danger mb-4">Learn more</button>
+          <h4 class="text-dark">Entertai<span class="text-light">nm</span>ent i<span class="text-light">s</span><span class="text-light"> fun</span></h4>
+          <p class="text-info fs-5">Feel free with recommendations</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{{ url_for('static', filename='images/front_banner_5.webp') }}" class="d-block w-100 height" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <button type="button" class="btn btn-outline-light mb-4">Learn more</button>
+          <h4>Your Shows your life</h4>
+          <p class="fs-5">Feel free with recommendations</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  
+  <!-- Feature section -->
+  <h2 class="text-center mt-5">Features 😀</h2>
+  <div class="card-deck w-75 m-auto">
+      <div class="card mt-2">
+        <img class="card-img-top" src="{{ url_for('static', filename='images/feature_1.jpg')}}" alt="Card image cap">
+        <div class="card-body text-center">
+          <h5 class="card-title">Movies Mania</h5>
+          <p class="card-text">Recommend top movies  to easily get details with less efforts and time with proper details such as rating, genre, etc.</p>
+        </div>
+      </div>
+      <div class="card mt-2">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/feature_3.jpg')}}" alt="Card image cap">
+          <div class="card-body text-center">
+            <h5 class="card-title">Songs with Emotions</h5>
+            <p class="card-text">Recommend songs based on emotion using <strong>face recognition</strong> to get relief from manual searching and irritation</p>
+          </div>
+        </div>
+        <div class="card mt-2">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/feature_2.jpg')}}" alt="Card image cap">
+          <div class="card-body text-center">
+            <h5 class="card-title">Series Mania</h5>
+            <p class="card-text">Recommend top tv-shows and web-series to easily get details with less efforts and time with proper details such as rating, genre, etc.</p>
+          </div>
+        </div>
+  </div>
+
+  <!-- support -->
+  <h2 class="text-center mt-5">Sangeet Available 😎</h2>
+  <div class="container">
+      <div class="row ml-5 pl-5">
+        <div class="col-sm">
+          <img src="{{ url_for('static', filename='images/support_1.gif') }}" alt="" class="w-50">
+        </div>
+        <div class="col-sm">
+          <img src="{{ url_for('static', filename='images/support_2.gif') }}" alt="" class="w-50">
+        </div>
+        <div class="col-sm">
+          <img src="{{ url_for('static', filename='images/support_3.gif') }}" alt="" class="w-50 h-75">
+        </div>
+      </div>
+  </div>
+
+  <!--footer start-->
+  <footer>
+    <div class="footer-wrap">
+    <div class="container first_class">
+        <div class="row">
+          <div class="col-md-4 col-sm-6">
+            <h3>BE THE FIRST TO KNOW</h3>
+            <p>Get all the latest information on Sangeet Services, Events, Jobs
+              and Fairs. Sign up for our newsletter today.</p>
+          </div>
+          <div class="col-md-4 col-sm-6">
+          <form class="newsletter">
+             <input type="text" placeholder="Email Address"> 
+             <button class="newsletter_submit_btn" type="submit"><i class="fa fa-paper-plane"></i></button>  
+          </form>
+          
+          </div>
+          <div class="col-md-4 col-sm-6">
+          <div class="col-md-12">
+            <div class="standard_social_links">
+          <div>
+            <li class="round-btn btn-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a>
+  
+            </li>
+            <li class="round-btn btn-linkedin"><a href="#"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-twitter"><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-instagram"><a href="#"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-whatsapp"><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+  
+            </li>
+            <li class="round-btn btn-envelop"><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+  
+            </li>
+          </div>
+        </div>  
+          </div>
+            <div class="clearfix"></div>
+          <div class="col-md-12"><h3 style="text-align: right;">Stay Connected</h3></div>
+          </div>
+        </div>
+    </div>
+    <div class="copyright"> Copyright 2023 | All Rights Reserved by Get Recommend.</div>
+    </div>
+</footer>
+<!--footer end-->
+
+  <script src="{{ url_for('static', filename='loader.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/fddf5c0916.js" crossorigin="anonymous"></script>
+</body>
+</html>

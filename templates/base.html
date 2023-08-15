@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <title>Get Recommend</title>
+    <style>
+        body{
+    background: #eee;
+}
+
+.dark-theme{
+    background: #000;
+    color: white;
+}
+
+.img-dark{
+    background-color: black;
+}
+
+.img-dark img{
+    opacity: 0.5;
+    height: 65vh;
+}
+#side_nav{
+    background: #000;
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.2s;
+}
+
+.img-hover-zoom{
+    transition: transform .2s;
+}
+
+.img-hover-zoom:hover{
+    transform: scale(1.5);
+}
+
+.text-color{
+    transition: text-shadow 0.3s ease;
+}
+
+.text-color:hover{
+    text-shadow: 0.5px 0.5px rgb(247, 198, 198);
+}
+.content{
+    min-height: 100vh;
+    width: 100%;
+}
+.sidebar li.active{
+    background: #eee;
+    border-radius: 8px;
+}
+
+.sidebar li.active a, .sidebar li.active a:hover{
+    color: #000;
+}
+
+.sidebar a{
+   color: #fff;
+}
+.dashboard-container-2, .dashboard-container-3, .dashboard-container-4, .dashboard-container-5{
+    display: none;
+}
+.width{
+    width: 163vh;
+}
+.yellow{
+    color: rgb(236, 204, 1);
+}
+
+.set-position{
+    position: absolute;
+    top: 10rem;
+    left: -0.5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: #eee;
+}
+
+.set-position-2{
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    height: 2rem;
+    opacity: 100%;
+}
+
+.set-position-3{
+    position: absolute;
+    bottom: 5rem;
+    left: 43%;
+}
+
+.loader{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    transition: opacity 0.75s, visibility 0.75s;
+    z-index: 999;
+}
+
+.loader-hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader::after{
+    content: '';
+    width: 75px;
+    height: 75px;
+    border: 15px solid #dddddd;
+    border-top-color: #f11010;
+    border-left-color: black;
+    border-radius: 50%;
+    animation: loading 1.75s ease infinite;
+}
+@keyframes loading{
+    from{ transform: rotate(0turn);}
+    to{ transform: rotate(2turn);}
+}
+
+.click-loading{
+    display: none;
+}
+
+@media(max-width: 767px){
+    #side_nav{
+        margin-left: -250px;
+        position: fixed;
+        min-height: 100vh;
+        z-index: 1;
+    }
+
+    #side_nav.active{
+        margin-left: 0;
+    }
+}
+
+    .marquee-container {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marqueeAnimation 15s linear infinite;
+    }
+
+    @keyframes marqueeAnimation {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    </style>
+</head>
+<body>
+    <div class="main-container d-flex">
+        <div class="sidebar" id="side_nav">
+            <div class="header-box pt-3 px-2 pb-4 d-flex justify-content-between">
+                <a href="{{url_for('sangeet')}}" class="text-decoration-none text-color"><h2 class="fs-4"><span class="me-2 "><img src="{{ url_for('static', filename='images/web.png') }}" width="30" height="30" alt="" class="img-hover-zoom"></span><span class="text-white w-100">Get Recommend</span></h2></a>
+                <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa-solid fa-bars-staggered"></i></button>
+            </div>
+            <ul class="list-unstyled px-2">
+                 <li class="active"><a href="#" class="text-decoration-none px-3 py-2 d-block active" id="showDivLink"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                 <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block" id="showDivLink-2"><i class="fa-solid fa-face-smile"></i></i> FEM song Recommend</a></li>
+                 <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block" id="showDivLink-3"><i class="fa-solid fa-tv"></i> TV Series Recommend</a></li>
+                 <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block" id="showDivLink-4"><i class="fa-solid fa-video"></i> Movies Recommend</a></li>
+            </ul>
+            <hr class="h-color text-white mx-2">
+
+            <ul class="list-unstyled px-2">
+                <li class="dropdown"><a href="#" class="text-decoration-none dropdown-toggle px-3 py-2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-gear"></i> Appearance</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><button class="dropdown-item" id="effect_1">Dark</button></li>
+                        <li><button class="dropdown-item" id="effect_2">Light</button></li>
+                      </ul>
+                </li>
+                <li class="dropdown log-control"><a href="#" class="text-decoration-none dropdown-toggle px-3 py-2" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ url_for('static', filename='images/profile.png') }}" alt="" width="30" height="30" class="rounded"> {{session.userinfo.name.split(' ')[0]}}!
+                </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a href="{{url_for('logout')}}" class="dropdown-item">Log Out</a></li>
+                      </ul>
+                </li>
+
+            </ul>
+        </div>
+        <div class="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                <div class="d-flex justify-content-between d-sm-none d-md-block  d-none d-sm-block">
+                    <i class="fa-regular fa-snowflake fa-spin fa-spin-reverse fs-4" style="color: #000000;"></i>
+                </div>
+                <div class="d-flex justify-content-between d-md-none d-block">
+                  <a class="navbar-brand fs-4" href="#"><img src="{{ url_for('static', filename='images/web_l.png') }}" alt="" width="30" height="30"> Get Recommend</a>
+                  <button class="btn px-1 py-0 open-btn"><i class="fa-solid fa-bars-staggered"></i></button>
+                </div>
+                <form class="d-flex">
+                    <div class="sm-log-control" id="navbarNavDarkDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                          <button class="btn btn-transparent dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="" width="30" height="30" class="rounded"> {{session.userinfo.name.split(' ')[0]}}!
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{{url_for('logout')}}">Log Out</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </form>
+                </div>
+            </nav>
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+            <div class="loader"></div>
+            <div class="dashboard-container" id="myDiv">
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                    Dashboard
+                </div>
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                    <div class="container px-4">
+                        <div class="row gx-5">
+                          <div class="col rounded">
+                           <div class="p-2 border bg-success text-white rounded">Total Admin</div>
+                           <div class="p-2 border text-dark rounded"><span class="dark-theme">01</span></div>
+                          </div>
+                          <div class="col rounded">
+                            <div class="p-2 border bg-warning text-white rounded">Total Users</div>
+                            <div class="p-2 border text-dark rounded"><span class="dark-theme">20</span></div>
+                          </div>
+                          <div class="col rounded">
+                            <div class="p-2 border bg-info text-white rounded">Features</div>
+                            <div class="p-2 border  text-dark rounded"><span class="dark-theme">03</span></div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="alert middle-1 alert-light m-2 fs-4 px-5 dark-theme" role="alert">
+                    <div class="row ">
+                        <div class="col mt-5">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                        <div class="col align-item-center">
+                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                      <div class="carousel-item active">
+                                        <img src="{{ url_for('static', filename='images/music.jpg') }}" class="d-block w-100 rounded ml-5" alt="...">
+                                      </div>
+                                      <div class="carousel-item">
+                                        <img src="{{ url_for('static', filename='images/movies.jpg') }}" class="d-block w-100 rounded ml-5" alt="...">
+                                      </div>
+                                      <div class="carousel-item">
+                                        <img src="{{ url_for('static', filename='images/college.webp') }}" class="d-block w-100 rounded ml-5" alt="...">
+                                      </div>
+                                    </div>
+                                  </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-light m-2 text-dark dark-theme" role="alert">
+                    <h5 class="text-center">
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-linkedin dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-github dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-solid fa-file dark-theme"></i></a>
+                    </h5>
+                         
+                    <h5 class="text-center dark-theme">Developed By Upendra Pratap Singh</h5>
+                </div>
+                
+              </div>
+
+              <div class="dashboard-container-2" id="myDiv-2">
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                    Face Emotion Song Recommendation
+                </div>
+                
+                <div class="alert alert-light m-2 img-dark position-relative" role="alert">
+                    <img src="{{ url_for('static', filename='images/emotion.gif') }}" alt="" class="w-100 rounded">
+                    <div class="position-absolute top-0 start-50 translate-middle mt-5">
+                        <h1 class="text-light mt-5">YOUR <span class="text-warning">MUSIC</span></h1>
+                        <p class="fs-5 text-light text-center">😀 😔 😮 😱 😐 😎 😄</p>
+                    </div>
+
+                    <div class="set-position w-25">
+                        <h2 class="text-dark px-5">Get Relief</h2>
+                        <p class="fs-5 text-dark px-5">From <span class="text-danger fs-4">THINKING</span><br>Get Recommendation <span class="text-warning fs-4">With Emotion</span></p>
+                    </div>
+                    <div class="set-position-2">
+                        <img src="{{ url_for('static', filename='images/music_logo.png') }}" alt="" class="w-100 rounded-circle">
+                    </div>
+
+                    <div class="position-absolute top-50 start-50 translate-middle mt-5">
+                        <a href="{{url_for('emotion_recommend')}}" class="text-decoration-none btn btn-outline-light" id="load-link"><h1>Let's Recommend <i class="fa-regular fa-circle-play fa-beat-fade fa-lg"></i></h1></a>
+                    </div>
+
+                    <div class="set-position-3 text-light click-loading d-flex" id="click-loading">
+                        <h2 class="px-3 text-center click-loading"><span><i class="fa-solid fa-spinner fa-spin click-loading" style="color: #ffffff;"></i></span> Loading...</h2>
+                    </div>
+                    
+                </div>
+
+                <div class="alert alert-light m-2 text-dark dark-theme" role="alert">
+                    <h5 class="text-center">
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-linkedin dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-github dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-solid fa-file dark-theme"></i></a>
+                    </h5>
+                         
+                    <h5 class="text-center dark-theme">Developed By Upendra Pratap Singh</h5>
+                </div>
+              </div>
+              
+              <div class="dashboard-container-3" id="myDiv-3">
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                     Series Mania
+                </div>
+
+                <div class="alert m-2 img-dark position-relative" role="alert">
+                    <img src="{{ url_for('static', filename='images/tv_show.jpeg') }}" alt="" class="w-100 rounded">
+                    <div class="position-absolute top-0 start-50 translate-middle mt-5">
+                        <h1 class="text-warning mt-5">BEST TV SERIES</h1>
+                        <p class="fs-5 text-light text-center">To Bing-Watch In All Seasons</p>
+                    </div>
+                    <div class="set-position w-25">
+                        <h2 class="text-dark px-5">What's New</h2>
+                        <p class="fs-5 text-dark px-5">Imagine your <span class="text-danger fs-4">NETFLIX</span><br>With <span class="text-warning fs-4">Series Mania</span></p>
+                    </div>
+
+                    <div class="position-absolute top-50 start-50 translate-middle mt-5">
+                        <a href="{{url_for('series_suggestion')}}" class="text-decoration-none"><h1><i class="fa-regular fa-circle-play fa-beat-fade fa-xl" style="color: #fafafa;"></i></h1></a>
+                    </div>
+                </div>
+
+                <div class="alert alert-light m-2 dark-theme" role="alert">
+                    <div class="marquee-container bg-dark">
+                        <div class="marquee-content">
+                          <img src="{{ url_for('static', filename='images/marque_2.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_3.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_2.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_3.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_2.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_3.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_2.png') }}" alt="Image" class="w-25">
+                          <img src="{{ url_for('static', filename='images/marque_3.png') }}" alt="Image" class="w-25">
+                        </div>
+                      </div>
+                      <h5 class="text-center mt-2 text-dark">
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-linkedin dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-github dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-solid fa-file dark-theme"></i></a>
+                    </h5>
+                         
+                    <h5 class="text-center">Developed By Upendra Pratap Singh</h5>
+                </div>
+              </div>
+
+              <div class="dashboard-container-4" id="myDiv-4">
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                    Movies Mania
+                </div>
+
+                <div class="alert alert-light m-2 fs-4 dark-theme" role="alert">
+                    <div class="marquee-container bg-dark">
+                        <div class="marquee-content">
+                          <img src="{{ url_for('static', filename='images/marque.png') }}" alt="Image" class="w-100">
+                          <img src="{{ url_for('static', filename='images/marque.png') }}" alt="Image" class="w-100">
+                        </div>
+                      </div>
+                </div>
+
+                <div class="alert alert-light m-2 fs-4 bg-dark dark-theme" role="alert">
+                    <h3 class="text-center text-light p-3">Get Your Recommendation</h3>
+                    <form action="{{url_for('moive_suggestion')}}" class="d-grid gap-2 " method="POST">
+                        <input class="btn btn-outline-warning" type="submit" value="Let's start recommendation">
+                      </form>
+                </div>
+
+                <div class="alert alert-light m-2 dark-theme" role="alert">
+                    <h5 class="text-center text-dark dark-theme">
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-linkedin dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-brands fa-github dark-theme"></i></a>
+                        <a class="mr-2 text-dark" href="#"><i class="fa-solid fa-file dark-theme"></i></a>
+                    </h5>
+                         
+                    <h5 class="text-center">Developed By Upendra Pratap Singh</h5>
+                </div>
+                
+              </div>
+        </div>
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(".sidebar ul li").on('click',function(){
+            $(".sidebar ul li.active").removeClass('active');
+            $(this).addClass('active');
+        })
+
+        $('.open-btn').on('click',function(){
+            $('.sidebar').addClass('active');
+        })
+
+        $('.close-btn').on('click',function(){
+            $('.sidebar').removeClass('active');
+        })
+    </script>
+           
+    <script>
+        document.getElementById('showDivLink').addEventListener('click', function() {
+            fetch('/show_div')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('myDiv').style.display = 'block';
+                        document.getElementById('myDiv-2').style.display = 'none';
+                        document.getElementById('myDiv-3').style.display = 'none';
+                        document.getElementById('myDiv-4').style.display = 'none';
+                        document.getElementById('myDiv-5').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+        document.getElementById('showDivLink-2').addEventListener('click', function() {
+            fetch('/show_div')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('myDiv-2').style.display = 'block';
+                        document.getElementById('myDiv').style.display = 'none';
+                        document.getElementById('myDiv-3').style.display = 'none';
+                        document.getElementById('myDiv-4').style.display = 'none';
+                        document.getElementById('myDiv-5').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+        document.getElementById('showDivLink-3').addEventListener('click', function() {
+            fetch('/show_div')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('myDiv-3').style.display = 'block';
+                        document.getElementById('myDiv').style.display = 'none';
+                        document.getElementById('myDiv-2').style.display = 'none';
+                        document.getElementById('myDiv-4').style.display = 'none';
+                        document.getElementById('myDiv-5').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+        document.getElementById('showDivLink-4').addEventListener('click', function() {
+            fetch('/show_div')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('myDiv-4').style.display = 'block';
+                        document.getElementById('myDiv').style.display = 'none';
+                        document.getElementById('myDiv-2').style.display = 'none';
+                        document.getElementById('myDiv-3').style.display = 'none';
+                        document.getElementById('myDiv-5').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var chartData = {
+                             labels: ['FER', 'Series R', 'Movie R'],
+                             values: [40, 20, 50]
+                            };
+
+    
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.labels,
+                    datasets: [{
+                        label: 'Recommend / User',
+                        data: chartData.values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var elements = document.querySelectorAll(".dark-theme");
+  
+         elements.forEach(function(element) {
+              element.classList.remove("dark-theme");
+         });
+        document.getElementById("effect_2").addEventListener("click", function() {
+  
+          elements.forEach(function(element) {
+              element.classList.remove("dark-theme");
+          });
+        });
+        document.getElementById("effect_1").addEventListener("click", function() {
+  
+          elements.forEach(function(element) {
+              element.classList.add("dark-theme");
+          });
+        });
+    </script>
+
+    <script>
+        window.addEventListener("load", () =>{
+            const loader = document.querySelector(".loader");
+            loader.classList.add("loader-hidden");
+
+            loader.addEventListener('transitionend', () =>{
+                document.body.removeChild("loader");
+            })
+        })
+    </script>
+
+    <script>
+        document.getElementById('load-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            const ClickLoader = document.querySelectorAll(".click-loading");
+            ClickLoader.forEach(function(click){
+                click.style.display='block';
+            })
+            // document.getElementById('click-loading').style.display = 'block';
+            window.location.href = document.getElementById('load-link').getAttribute('href');
+            setTimeout(function() {
+                ClickLoader.forEach(function(click){
+                click.style.display='none';
+            })
+                // document.getElementById('click-loading').style.display = 'none';
+            }, 19000); 
+        });
+    </script>
+
+</body>
+</html>

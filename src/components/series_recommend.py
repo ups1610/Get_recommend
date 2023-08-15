@@ -11,7 +11,7 @@ import sys
 
 class SeriesRecommend:
     def __init__(self):
-        self.api = "00efec2804c4bb80cc77673e690051af"
+        self.api = "YOUR TMDB API"
         self.df = pd.read_csv(os.path.join('data','final_series_data.csv'))
 
     def match_extract(self,title):

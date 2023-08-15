@@ -26,10 +26,10 @@ warnings.filterwarnings('ignore')
 app=Flask(__name__)
 
 appConf = {
-    "OAUTH2_CLIENT_ID": "255580419891-pvh0ikrmeov49d3hj7l2cls0mv8ieio3.apps.googleusercontent.com",
-    "OAUTH2_CLIENT_SECRET": "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",
+    "OAUTH2_CLIENT_ID": "YOUR CLIENT_ID",
+    "OAUTH2_CLIENT_SECRET": "YOUR CLIENT SECRET",
     "OAUTH2_META_URL": "https://accounts.google.com/.well-known/openid-configuration",
-    "FLASK_SECRET": "ALongRandomlyGeneratedString",
+    "FLASK_SECRET": "anyRandomString",
     "FLASK_PORT": 5000
 }
 
